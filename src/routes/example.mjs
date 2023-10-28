@@ -1,12 +1,6 @@
-"use strict";
-
-// Import config
-import {getEnvironmentOverview} from "../config.mjs";
-
 // Import modules
+import {getOverview} from "../config.mjs";
 import {StatusCodes} from "http-status-codes";
-
-// Import useApp, express
 import {useApp, express} from "../init/express.mjs";
 
 import * as utilVisitor from "../utils/visitor.mjs";
@@ -72,7 +66,7 @@ router.get("/visitor", (req, res) => {
  *         description: Returns the application environment.
  */
 router.get("/env", (_, res) => {
-    res.send(getEnvironmentOverview());
+    res.send(getOverview());
 });
 
 /**
