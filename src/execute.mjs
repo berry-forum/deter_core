@@ -60,6 +60,7 @@ export function invokeApp() {
     return {
         loadPromises,
         loadRoutes,
+        loadEvents,
         execute,
     };
 }
@@ -94,6 +95,23 @@ function loadRoutes(routerNames) {
 
     const routerMappers = routeFilenames.map((n) => import(n));
     routerMappers.forEach((c) => c.then((f) => f.default()));
+
+    return invokeApp();
+}
+
+/**
+ * Load events from specified event names of Discord.
+ * @param {string[]} eventNames the names of the events to load
+ * @return {object} the application invoker
+ */
+function loadEvents(eventNames) {
+    const eventDirectory = new URL("events/", import.meta.url);
+    const eventFilenames = eventNames.map(
+        (n) => new URL(`${n}.mjs`, eventDirectory),
+    );
+
+    const eventMappers = eventFilenames.map((n) => import(n));
+    eventMappers.forEach((c) => c.then((f) => f.default()));
 
     return invokeApp();
 }

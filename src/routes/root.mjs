@@ -16,8 +16,8 @@ export default () => {
     app.get("/", (_, res) => {
         const meetMessage = `
         Star Inc. Lavateinn Framework <br />
-        <a href="https://github.com/star-inc/lavateinn" target="_blank">
-            https://github.com/star-inc/lavateinn
+        <a href="https://github.com/buff-system/deter_core" target="_blank">
+            https://github.com/buff-system/deter_core
         </a>
     `;
         res.status(StatusCodes.IM_A_TEAPOT).send(meetMessage);

@@ -12,18 +12,25 @@ import {
     invokeApp,
 } from "./src/execute.mjs";
 
+import {
+    loginPromise,
+} from "./src/init/discord.mjs";
+
 // Define plugin promises
 const pluginPromises = [
-    new Promise((resolve) => {
-        console.info("The example to wait the plugin promise.");
-        setTimeout(resolve, 3000);
-    }),
+    loginPromise,
 ];
 
 // Define router names
 const routerNames = [
     "root",
     "example",
+];
+
+// Define event names
+const eventNames = [
+    "message_create",
+    "thread_create",
 ];
 
 // Define display
@@ -42,5 +49,6 @@ const displayStatus = (protocolStatus) => {
 invokeApp().
     loadPromises(pluginPromises).
     loadRoutes(routerNames).
+    loadEvents(eventNames).
     execute().
     then(displayStatus);
