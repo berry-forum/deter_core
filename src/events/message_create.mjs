@@ -34,5 +34,6 @@ export default () => client.on("messageCreate", async (message) => {
         content: message.content,
         authorId: message.author.id,
         createdAt: message.createdTimestamp,
+        discussionId: message.channelId,
     });
 });

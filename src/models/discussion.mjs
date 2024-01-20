@@ -7,6 +7,8 @@ import {
     Model,
 } from "sequelize";
 
+import Post from "./post.mjs";
+
 const sequelize = useSequelize();
 
 /**
@@ -23,3 +25,4 @@ Discussion.init({
     sequelize,
     modelName: "discussion",
 });
+Discussion.hasMany(Post);
