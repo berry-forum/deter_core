@@ -28,7 +28,7 @@ const pluginPromises = [
 // Define router names
 const routerNames = [
     "root",
-    "forum",
+    "discussions",
 ];
 
 // Define event names
