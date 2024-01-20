@@ -7,6 +7,8 @@ import {
     Model,
 } from "sequelize";
 
+import User from "./user.mjs";
+
 const sequelize = useSequelize();
 
 /**
@@ -23,4 +25,7 @@ Post.init({
 }, {
     sequelize,
     modelName: "post",
+});
+Post.belongsTo(User, {
+    foreignKey: "authorId",
 });
