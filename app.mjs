@@ -15,16 +15,20 @@ import {
 import {
     loginPromise,
 } from "./src/init/discord.mjs";
+import {
+    initializePromise,
+} from "./src/init/sequelize.mjs";
 
 // Define plugin promises
 const pluginPromises = [
     loginPromise,
+    initializePromise,
 ];
 
 // Define router names
 const routerNames = [
     "root",
-    "example",
+    "forum",
 ];
 
 // Define event names

@@ -8,7 +8,7 @@ import {
     getMust,
 } from "../config.mjs";
 
-export const client = new Client({
+const client = new Client({
     partials: [
         Partials.Channel,
         Partials.Message,
@@ -27,3 +27,4 @@ export const client = new Client({
 
 const botToken = getMust("DISCORD_BOT_TOKEN");
 export const loginPromise = client.login(botToken);
+export const useClient = () => client;

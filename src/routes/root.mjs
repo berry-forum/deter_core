@@ -1,7 +1,7 @@
 // Import modules
 import {
-    StatusCodes,
-} from "http-status-codes";
+    getMust,
+} from "../config.mjs";
 
 import {
     useApp,
@@ -14,13 +14,8 @@ export default () => {
 
     // Redirect / to INDEX_REDIRECT_URL
     app.get("/", (_, res) => {
-        const meetMessage = `
-        Star Inc. Lavateinn Framework <br />
-        <a href="https://github.com/buff-system/deter_core" target="_blank">
-            https://github.com/buff-system/deter_core
-        </a>
-    `;
-        res.status(StatusCodes.IM_A_TEAPOT).send(meetMessage);
+        const indexRedirectUrl = getMust("INDEX_REDIRECT_URL");
+        res.redirect(indexRedirectUrl);
     });
 
     // The handler for robots.txt (deny all friendly robots)
