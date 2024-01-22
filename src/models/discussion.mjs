@@ -3,16 +3,14 @@ import {
 } from "../init/sequelize.mjs";
 
 import {
-    Thread,
-} from "discord.js";
-
-import {
     DataTypes,
     Model,
 } from "sequelize";
 
 import Post from "./post.mjs";
 import User from "./user.mjs";
+
+import discord from "discord.js";
 
 const sequelize = useSequelize();
 
@@ -41,7 +39,7 @@ Discussion.belongsTo(User, {
 
 /**
  * Convert Discord's Thread to Deter's Discussion
- * @param {Thread} thread Discord's Thread
+ * @param {discord.Thread} thread Discord's Thread
  * @return {Object}
  */
 export function threadToDiscussion(thread) {

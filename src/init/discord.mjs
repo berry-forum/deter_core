@@ -39,8 +39,15 @@ export const initializePromise = (async () => {
     const channel = await client.channels.fetch(channelIdForum);
 
     // Threads
-    const channelThread = await channel.threads.fetch();
-    const remoteThreads = Array.from(channelThread.threads.values());
+    const channelThreadActivated = await channel.threads.fetch();
+    const channelThreadArchived = await channel.threads.fetchArchived();
+    const remoteActivatedThreads = Array.from(
+        channelThreadActivated.threads.values(),
+    );
+    const remoteArchivedThreads = Array.from(
+        channelThreadArchived.threads.values(),
+    );
+    const remoteThreads = remoteActivatedThreads.concat(remoteArchivedThreads);
     const remoteThreadIds = remoteThreads.map(({id}) => id);
     const localThreadIds = await Discussion.findAll({
         where: {
@@ -54,9 +61,20 @@ export const initializePromise = (async () => {
         ({id}) => appendThreadIds.includes(id),
     ).map(threadToDiscussion);
 
+    // Posts
+    const messageThreads = remoteThreads.filter(
+        ({id}) => appendThreadIds.includes(id),
+    );
+    const threadMessages = await Promise.all(messageThreads.map(
+        (thread) => thread.messages.fetch(),
+    ));
+    const appendPosts = threadMessages.map(
+        (messages) => messages.map(messageToPost),
+    ).flat();
+
     // Users
     const remoteUserIds = Array.from(
-        new Set(appendThreads.map(({ownerId}) => ownerId)),
+        new Set(appendPosts.map(({authorId}) => authorId)),
     );
     const localUserIds = await User.findAll({
         where: {
@@ -72,17 +90,6 @@ export const initializePromise = (async () => {
     const appendUsers = Array.from(
         remoteUsers.values(),
     ).map(memberToUser);
-
-    // Posts
-    const messageThreads = remoteThreads.filter(
-        ({id}) => appendThreadIds.includes(id),
-    );
-    const threadMessages = await Promise.all(messageThreads.map(
-        (thread) => thread.messages.fetch()),
-    );
-    const appendPosts = threadMessages.map(
-        (messages) => messages.map(messageToPost),
-    ).flat();
 
     // Bulk creation
     await User.bulkCreate(appendUsers, {ignoreDuplicates: true});

@@ -3,13 +3,11 @@ import {
 } from "../init/sequelize.mjs";
 
 import {
-    Member,
-} from "discord.js";
-
-import {
     DataTypes,
     Model,
 } from "sequelize";
+
+import discord from "discord.js";
 
 const sequelize = useSequelize();
 
@@ -32,7 +30,7 @@ User.init({
 
 /**
  * Convert Discord's Member to Deter's User
- * @param {Member} member Discord's Member
+ * @param {discord.Member} member Discord's Member
  * @return {Object}
  */
 export function memberToUser(member) {

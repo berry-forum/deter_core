@@ -3,13 +3,11 @@ import {
 } from "../init/sequelize.mjs";
 
 import {
-    Message,
-} from "discord.js";
-
-import {
     DataTypes,
     Model,
 } from "sequelize";
+
+import discord from "discord.js";
 
 import User from "./user.mjs";
 
@@ -36,7 +34,7 @@ Post.belongsTo(User, {
 
 /**
  * Convert Discord's Message to Deter's Post
- * @param {Message} message Discord's Message
+ * @param {discord.Message} message Discord's Message
  * @return {Object}
  */
 export function messageToPost(message) {
