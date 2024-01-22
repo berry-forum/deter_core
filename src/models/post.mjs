@@ -3,6 +3,10 @@ import {
 } from "../init/sequelize.mjs";
 
 import {
+    Message,
+} from "discord.js";
+
+import {
     DataTypes,
     Model,
 } from "sequelize";
@@ -29,3 +33,30 @@ Post.init({
 Post.belongsTo(User, {
     foreignKey: "authorId",
 });
+
+/**
+ * Convert Discord's Message to Deter's Post
+ * @param {Message} message Discord's Message
+ * @return {Object}
+ */
+export function messageToPost(message) {
+    const {
+        id,
+        content,
+        author,
+        createdTimestamp: createdAt,
+        channelId: discussionId,
+    } = message;
+
+    const {
+        id: authorId,
+    } = author;
+
+    return {
+        id,
+        content,
+        authorId,
+        createdAt,
+        discussionId,
+    };
+}

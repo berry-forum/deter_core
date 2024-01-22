@@ -10,7 +10,7 @@ import {
     getMust,
 } from "../config.mjs";
 
-import Discussion from "../models/discussion.mjs";
+import Discussion, {threadToDiscussion} from "../models/discussion.mjs";
 
 const client = useClient();
 
@@ -26,6 +26,5 @@ export default () => client.on("threadCreate", async (thread) => {
         return;
     }
 
-    const {id, name} = thread;
-    await Discussion.create({id, name});
+    await Discussion.create(threadToDiscussion(thread));
 });

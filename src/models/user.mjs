@@ -3,6 +3,10 @@ import {
 } from "../init/sequelize.mjs";
 
 import {
+    Member,
+} from "discord.js";
+
+import {
     DataTypes,
     Model,
 } from "sequelize";
@@ -25,3 +29,36 @@ User.init({
     sequelize,
     modelName: "user",
 });
+
+/**
+ * Convert Discord's Member to Deter's User
+ * @param {Member} member Discord's Member
+ * @return {Object}
+ */
+export function memberToUser(member) {
+    const {
+        user,
+        nickname: memberLocalDisplayName,
+        avatar: memberLocalAvatarHash,
+    } = member;
+
+    const {
+        id,
+        username,
+        globalName: memberGlobalDisplayName,
+        avatar: memberGlobalAvatarHash,
+    } = user;
+
+    const displayName = memberLocalDisplayName ||
+        memberGlobalDisplayName ||
+        username;
+    const avatarHash = memberLocalAvatarHash ||
+        memberGlobalAvatarHash;
+
+    return {
+        id,
+        username,
+        displayName,
+        avatarHash,
+    };
+}

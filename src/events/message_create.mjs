@@ -11,8 +11,8 @@ import {
 } from "../config.mjs";
 
 import Discussion from "../models/discussion.mjs";
-import Post from "../models/post.mjs";
-import User from "../models/user.mjs";
+import Post, {messageToPost} from "../models/post.mjs";
+import User, {memberToUser} from "../models/user.mjs";
 
 const client = useClient();
 
@@ -30,18 +30,7 @@ export default () => client.on("messageCreate", async (message) => {
         return;
     }
 
-    await User.upsert({
-        id: message.author.id,
-        username: message.author.username,
-        displayName: message.author.globalName,
-        avatarHash: message.author.avatar,
-    });
-
-    await Post.create({
-        id: message.id,
-        content: message.content,
-        authorId: message.author.id,
-        createdAt: message.createdTimestamp,
-        discussionId: message.channelId,
-    });
+    const authorMember = await message.guild.members.fetch(message.author.id);
+    await User.upsert(memberToUser(authorMember));
+    await Post.create(messageToPost(message));
 });

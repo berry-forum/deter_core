@@ -13,16 +13,16 @@ import {
 } from "./src/execute.mjs";
 
 import {
-    loginPromise,
+    initializePromise as initDiscord,
 } from "./src/init/discord.mjs";
 import {
-    initializePromise,
+    initializePromise as initSequelize,
 } from "./src/init/sequelize.mjs";
 
 // Define plugin promises
 const pluginPromises = [
-    loginPromise,
-    initializePromise,
+    initDiscord,
+    initSequelize,
 ];
 
 // Define router names
