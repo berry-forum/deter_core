@@ -1,3 +1,3 @@
-# deter_core
+# Deter Core
 
-Tiny microservice framework with flexible.
+在名為 Discord 的高速公路風馳電掣的論壇系統 ⚔️ 
