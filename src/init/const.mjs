@@ -1,8 +1,7 @@
-"use strict";
 // Constants
 
-export const APP_NAME = "lavateinn";
-export const APP_DESCRIPTION = "Tiny microservice framework with flexible.";
+export const APP_NAME = "deter_core";
+export const APP_DESCRIPTION = "The forum driven on the Discord way.";
 
 export const APP_VERSION = "latest";
 
