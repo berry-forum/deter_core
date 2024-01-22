@@ -1,4 +1,6 @@
 // Import modules
+import {StatusCodes} from "http-status-codes";
+
 import {useApp, express} from "../init/express.mjs";
 
 import modelDiscussion from "../models/discussion.mjs";
@@ -38,6 +40,11 @@ router.get("/:id", async (req, res) => {
 
     // Discussion
     const discussion = await modelDiscussion.findByPk(discussionId);
+
+    if (!discussion) {
+        res.sendStatus(StatusCodes.NOT_FOUND);
+        return;
+    }
 
     // Post
     const posts = await modelPost.findAll({
