@@ -4,6 +4,7 @@ import {
 
 import {
     getMust,
+    isProduction,
 } from "../config.mjs";
 
 const sequelizeDbHost = getMust("SEQUELIZE_DB_HOST");
@@ -25,6 +26,7 @@ const sequelize = new Sequelize(
     {
         host: sequelizeDbHost,
         port: sequelizeDbPort,
+        logging: !isProduction(),
         dialect: "mysql",
     },
 );
