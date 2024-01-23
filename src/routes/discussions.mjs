@@ -27,12 +27,24 @@ router.use(express.json());
  *         description: Returns current POSIX timestamp.
  */
 router.get("/", async (_, res) => {
+    // Discussions
     const discussions = await modelDiscussion.findAll({
         order: [
             ["updatedAt", "DESC"],
         ],
     });
-    res.send(discussions);
+
+    // Authors
+    const userIds = new Set(discussions.map(({ownerId}) => ownerId));
+    const users = await Promise.all(Array.from(userIds).map(
+        (i) => modelUser.findByPk(i),
+    ));
+
+    // Response
+    res.send({
+        discussions,
+        users,
+    });
 });
 
 router.get("/:id", async (req, res) => {
@@ -48,20 +60,22 @@ router.get("/:id", async (req, res) => {
 
     // Post
     const posts = await modelPost.findAll({
-        discussionId,
+        where: {
+            discussionId,
+        },
         order: [
-            ["updatedAt", "DESC"],
+            ["createdAt", "ASC"],
         ],
     });
 
-    // Author
-    const authorIds = new Set(posts.map(({authorId}) => authorId));
-    const authors = await Promise.all(
-        Array.from(authorIds).map((i) => modelUser.findByPk(i)),
-    );
+    // Users
+    const userIds = new Set(posts.map(({authorId}) => authorId));
+    const users = await Promise.all(Array.from(userIds).map(
+        (i) => modelUser.findByPk(i),
+    ));
 
     // Response
-    res.send({discussion, posts, authors});
+    res.send({discussion, posts, users});
 });
 
 // Export routes mapper (function)
