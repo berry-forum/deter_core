@@ -11,6 +11,7 @@ import {
 } from "../config.mjs";
 
 import Discussion from "../models/discussion.mjs";
+import Media, {attachmentToMedia} from "../models/media.mjs";
 import Post, {messageToPost} from "../models/post.mjs";
 import User, {memberToUser} from "../models/user.mjs";
 
@@ -32,5 +33,11 @@ export default () => client.on("messageCreate", async (message) => {
 
     const authorMember = await message.guild.members.fetch(message.author.id);
     await User.upsert(memberToUser(authorMember));
+
+    const messageMedia = Array.from(
+        message.attachments.values(),
+    ).map(attachmentToMedia);
+    await Media.bulkCreate(messageMedia, {ignoreDuplicates: true});
+
     await Post.create(messageToPost(message));
 });

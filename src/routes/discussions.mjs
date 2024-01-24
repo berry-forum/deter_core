@@ -3,9 +3,12 @@ import {StatusCodes} from "http-status-codes";
 
 import {useApp, express} from "../init/express.mjs";
 
-import modelDiscussion from "../models/discussion.mjs";
-import modelPost from "../models/post.mjs";
-import modelUser from "../models/user.mjs";
+import {parse} from "discord-markdown-parser";
+
+import Discussion from "../models/discussion.mjs";
+import Post from "../models/post.mjs";
+import Media from "../models/media.mjs";
+import User from "../models/user.mjs";
 
 // Create router
 const {Router: newRouter} = express;
@@ -28,30 +31,30 @@ router.use(express.json());
  */
 router.get("/", async (_, res) => {
     // Discussions
-    const discussions = await modelDiscussion.findAll({
+    const discussions = await Discussion.findAll({
         order: [
             ["updatedAt", "DESC"],
+            ["createdAt", "DESC"],
         ],
+        include: User,
     });
-
-    // Authors
-    const userIds = new Set(discussions.map(({ownerId}) => ownerId));
-    const users = await Promise.all(Array.from(userIds).map(
-        (i) => modelUser.findByPk(i),
-    ));
 
     // Response
-    res.send({
-        discussions,
-        users,
-    });
+    res.send(discussions);
 });
 
 router.get("/:id", async (req, res) => {
     const {id: discussionId} = req.params;
 
     // Discussion
-    const discussion = await modelDiscussion.findByPk(discussionId);
+    const discussion = await Discussion.findByPk(discussionId, {
+        include: [User, {
+            model: Post,
+            where: {discussionId},
+            order: [["createdAt", "ASC"]],
+            include: [User, Media],
+        }],
+    });
 
     if (!discussion) {
         res.sendStatus(StatusCodes.NOT_FOUND);
@@ -59,23 +62,12 @@ router.get("/:id", async (req, res) => {
     }
 
     // Post
-    const posts = await modelPost.findAll({
-        where: {
-            discussionId,
-        },
-        order: [
-            ["createdAt", "ASC"],
-        ],
-    });
-
-    // Users
-    const userIds = new Set(posts.map(({authorId}) => authorId));
-    const users = await Promise.all(Array.from(userIds).map(
-        (i) => modelUser.findByPk(i),
-    ));
+    for (const post of discussion.posts) {
+        post.content = parse(post.content);
+    }
 
     // Response
-    res.send({discussion, posts, users});
+    res.send(discussion);
 });
 
 // Export routes mapper (function)

@@ -13,12 +13,6 @@ const sequelizeDbName = getMust("SEQUELIZE_DB_NAME");
 const sequelizeDbUser = getMust("SEQUELIZE_DB_USER");
 const sequelizeDbPass = getMust("SEQUELIZE_DB_PASS");
 
-const allModelNames = [
-    "discussion",
-    "post",
-    "user",
-];
-
 const sequelize = new Sequelize(
     sequelizeDbName,
     sequelizeDbUser,
@@ -31,15 +25,8 @@ const sequelize = new Sequelize(
     },
 );
 
-const loadModels = (names) => {
-    return Promise.all(names.map((name) => {
-        const filePath = new URL(`../models/${name}.mjs`, import.meta.url);
-        return import(filePath);
-    }));
-};
-
 export const initializePromise = (async () => {
-    await loadModels(allModelNames);
+    await import("../models/index.mjs");
     await sequelize.authenticate();
     await sequelize.sync();
 })();

@@ -7,9 +7,6 @@ import {
     Model,
 } from "sequelize";
 
-import Post from "./post.mjs";
-import User from "./user.mjs";
-
 import discord from "discord.js";
 
 const sequelize = useSequelize();
@@ -24,17 +21,12 @@ Discussion.init({
         primaryKey: true,
     },
     name: DataTypes.STRING,
-    ownerId: DataTypes.STRING,
     lastMessageId: DataTypes.STRING,
     messageCount: DataTypes.INTEGER,
     memberCount: DataTypes.INTEGER,
 }, {
     sequelize,
     modelName: "discussion",
-});
-Discussion.hasMany(Post);
-Discussion.belongsTo(User, {
-    foreignKey: "ownerId",
 });
 
 /**
@@ -44,13 +36,13 @@ Discussion.belongsTo(User, {
  */
 export function threadToDiscussion(thread) {
     const {
-        id, name, ownerId, lastMessageId,
+        id, name, ownerId: userId, lastMessageId,
         messageCount, memberCount,
         archiveTimestamp: createdAt,
     } = thread;
 
     return {
-        id, name, ownerId, lastMessageId,
+        id, name, userId, lastMessageId,
         messageCount, memberCount, createdAt,
     };
 }

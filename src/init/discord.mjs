@@ -12,6 +12,7 @@ import {Op} from "sequelize";
 import Discussion, {threadToDiscussion} from "../models/discussion.mjs";
 import Post, {messageToPost} from "../models/post.mjs";
 import User, {memberToUser} from "../models/user.mjs";
+import Media from "../models/media.mjs";
 
 const client = new Client({
     partials: [
@@ -49,11 +50,12 @@ export const initializePromise = (async () => {
     );
     const remoteThreads = remoteActivatedThreads.concat(remoteArchivedThreads);
     const remoteThreadIds = remoteThreads.map(({id}) => id);
-    const localThreadIds = await Discussion.findAll({
+    const localThreads = await Discussion.findAll({
         where: {
             id: {[Op.in]: remoteThreadIds},
         },
     });
+    const localThreadIds = localThreads.map(({id}) => id);
     const appendThreadIds = remoteThreadIds.filter(
         (id) => !localThreadIds.includes(id),
     );
@@ -74,7 +76,7 @@ export const initializePromise = (async () => {
 
     // Users
     const remoteUserIds = Array.from(
-        new Set(appendPosts.map(({authorId}) => authorId)),
+        new Set(appendPosts.map(({userId}) => userId)),
     );
     const localUserIds = await User.findAll({
         where: {
@@ -92,8 +94,15 @@ export const initializePromise = (async () => {
     ).map(memberToUser);
 
     // Bulk creation
-    await User.bulkCreate(appendUsers, {ignoreDuplicates: true});
-    await Discussion.bulkCreate(appendThreads, {ignoreDuplicates: true});
-    await Post.bulkCreate(appendPosts, {ignoreDuplicates: true});
+    await User.bulkCreate(appendUsers, {
+        ignoreDuplicates: true,
+    });
+    await Discussion.bulkCreate(appendThreads, {
+        ignoreDuplicates: true,
+    });
+    await Post.bulkCreate(appendPosts, {
+        ignoreDuplicates: true,
+        include: Media,
+    });
 })();
 export const useClient = () => client;
