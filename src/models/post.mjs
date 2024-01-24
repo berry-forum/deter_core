@@ -8,28 +8,23 @@ import {
 } from "sequelize";
 
 import discord from "discord.js";
-
-import User from "./user.mjs";
+import {attachmentToMedia} from "./media.mjs";
 
 const sequelize = useSequelize();
 
 /**
  * Post
  */
-export default class Post extends Model {}
+export default class Post extends Model { }
 Post.init({
     id: {
         type: DataTypes.STRING,
         primaryKey: true,
     },
     content: DataTypes.TEXT,
-    authorId: DataTypes.STRING,
 }, {
     sequelize,
     modelName: "post",
-});
-Post.belongsTo(User, {
-    foreignKey: "authorId",
 });
 
 /**
@@ -44,17 +39,18 @@ export function messageToPost(message) {
         author,
         createdTimestamp: createdAt,
         channelId: discussionId,
+        attachments,
     } = message;
 
-    const {
-        id: authorId,
-    } = author;
+    const {id: userId} = author;
+    const media = attachments.map(attachmentToMedia);
 
     return {
         id,
         content,
-        authorId,
+        userId,
         createdAt,
         discussionId,
+        media,
     };
 }
