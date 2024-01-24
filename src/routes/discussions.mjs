@@ -48,7 +48,7 @@ router.get("/:id", async (req, res) => {
 
     // Discussion
     const discussion = await Discussion.findByPk(discussionId, {
-        include: [{
+        include: [User, {
             model: Post,
             where: {discussionId},
             order: [["createdAt", "ASC"]],
