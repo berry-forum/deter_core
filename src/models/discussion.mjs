@@ -27,6 +27,7 @@ Discussion.init({
 }, {
     sequelize,
     modelName: "discussion",
+    paranoid: true,
 });
 
 /**

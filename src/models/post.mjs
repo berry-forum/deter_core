@@ -25,6 +25,7 @@ Post.init({
 }, {
     sequelize,
     modelName: "post",
+    paranoid: true,
 });
 
 /**

@@ -34,7 +34,11 @@ const routerNames = [
 // Define event names
 const eventNames = [
     "message_create",
+    "message_delete",
+    "message_update",
     "thread_create",
+    "thread_delete",
+    "thread_update",
 ];
 
 // Define display
