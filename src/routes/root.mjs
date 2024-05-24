@@ -5,12 +5,16 @@ import {
 
 import {
     useApp,
+    express,
 } from "../init/express.mjs";
 
 // Export routes mapper (function)
 export default () => {
     // Use application
     const app = useApp();
+
+    // Use static assets folder in /assets directory
+    app.use("/assets", express.static("assets"));
 
     // Redirect / to INDEX_REDIRECT_URL
     app.get("/", (_, res) => {

@@ -1,4 +1,5 @@
 import {
+    Events,
     ChannelType,
 } from "discord.js";
 
@@ -16,7 +17,7 @@ const client = useClient();
 
 const guildId = getMust("DISCORD_GUILD_ID");
 
-export default () => client.on("messageUpdate", async (message) => {
+export default () => client.on(Events.MessageUpdate, async (message) => {
     if (
         message.guild.id !== guildId ||
         message.channel.type !== ChannelType.PublicThread
@@ -30,5 +31,7 @@ export default () => client.on("messageUpdate", async (message) => {
     }
 
     post.content = message.reactions.message.content;
+    post.updateAt = message.reactions.message.editedTimestamp;
+
     await post.save();
 });

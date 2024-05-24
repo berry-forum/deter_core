@@ -1,4 +1,5 @@
 import {
+    Events,
     ChannelType,
 } from "discord.js";
 
@@ -16,7 +17,7 @@ const client = useClient();
 
 const guildId = getMust("DISCORD_GUILD_ID");
 
-export default () => client.on("messageDelete", async (message) => {
+export default () => client.on(Events.MessageDelete, async (message) => {
     if (
         message.guild.id !== guildId ||
         message.channel.type !== ChannelType.PublicThread

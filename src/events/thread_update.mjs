@@ -1,4 +1,5 @@
 import {
+    Events,
     ChannelType,
 } from "discord.js";
 
@@ -17,7 +18,7 @@ const client = useClient();
 const guildId = getMust("DISCORD_GUILD_ID");
 const channelIdForum = getMust("DISCORD_CHANNEL_ID_FORUM");
 
-export default () => client.on("threadUpdate", async (thread) => {
+export default () => client.on(Events.ThreadUpdate, async (thread) => {
     if (
         thread.guild.id !== guildId ||
         thread.parent.id !== channelIdForum ||

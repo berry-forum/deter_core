@@ -14,6 +14,8 @@ import Post, {messageToPost} from "../models/post.mjs";
 import User, {memberToUser} from "../models/user.mjs";
 import Media from "../models/media.mjs";
 
+export {Events} from "discord.js";
+
 const client = new Client({
     partials: [
         Partials.Channel,

@@ -7,7 +7,12 @@ import {
     Model,
 } from "sequelize";
 
+import {
+    createWriteStream,
+} from "node:fs";
+
 import discord from "discord.js";
+import got from "got";
 
 const sequelize = useSequelize();
 
@@ -52,6 +57,9 @@ export function memberToUser(member) {
         username;
     const avatarHash = memberLocalAvatarHash ||
         memberGlobalAvatarHash;
+
+    const avatarUrl = `https://cdn.discordapp.com/avatars/${id}/${avatarHash}`;
+    got.stream(avatarUrl).pipe(createWriteStream(`assets/images/avatar-${id}`));
 
     return {
         id,

@@ -1,4 +1,5 @@
 import {
+    Events,
     ChannelType,
 } from "discord.js";
 
@@ -19,7 +20,7 @@ const client = useClient();
 
 const guildId = getMust("DISCORD_GUILD_ID");
 
-export default () => client.on("messageCreate", async (message) => {
+export default () => client.on(Events.MessageCreate, async (message) => {
     if (
         message.guild.id !== guildId ||
         message.channel.type !== ChannelType.PublicThread

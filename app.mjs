@@ -14,6 +14,7 @@ import {
 
 import {
     initializePromise as initDiscord,
+    Events as discordEvents,
 } from "./src/init/discord.mjs";
 import {
     initializePromise as initSequelize,
@@ -33,12 +34,12 @@ const routerNames = [
 
 // Define event names
 const eventNames = [
-    "message_create",
-    "message_delete",
-    "message_update",
-    "thread_create",
-    "thread_delete",
-    "thread_update",
+    discordEvents.MessageCreate,
+    discordEvents.MessageDelete,
+    discordEvents.MessageUpdate,
+    discordEvents.ThreadCreate,
+    discordEvents.ThreadDelete,
+    discordEvents.ThreadUpdate,
 ];
 
 // Define display

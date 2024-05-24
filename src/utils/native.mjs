@@ -21,3 +21,14 @@ export function getPosixTimestamp() {
 export function isObjectPropExists(srcObject, propName) {
     return Object.prototype.hasOwnProperty.call(srcObject, propName);
 }
+
+/**
+ * Converts a string from camelCase to snake_case.
+ * @param {string} str The input string in camelCase format.
+ * @return {string} The transformed string in snake_case format.
+ */
+export function camelToSnakeCase(str) {
+    return str.replace(/[A-Z]/g, (letter) =>
+        `_${letter.toLowerCase()}`,
+    );
+}

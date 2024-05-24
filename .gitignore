@@ -1,6 +1,9 @@
 # App config files
 .env
 
+# App data files
+assets/images/avatar-*
+
 # Finder config file
 .DS_Store
 

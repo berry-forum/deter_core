@@ -15,6 +15,10 @@ import {
     useApp,
 } from "./init/express.mjs";
 
+import {
+    camelToSnakeCase,
+} from "./utils/native.mjs";
+
 /**
  * Setup protocol - http
  * @param {object} app
@@ -88,6 +92,8 @@ function loadPromises(promises) {
  * @return {object} the application invoker
  */
 function loadRoutes(routerNames) {
+    routerNames = routerNames.map(camelToSnakeCase);
+
     const routeDirectory = new URL("routes/", import.meta.url);
     const routeFilenames = routerNames.map(
         (n) => new URL(`${n}.mjs`, routeDirectory),
@@ -105,6 +111,8 @@ function loadRoutes(routerNames) {
  * @return {object} the application invoker
  */
 function loadEvents(eventNames) {
+    eventNames = eventNames.map(camelToSnakeCase);
+
     const eventDirectory = new URL("events/", import.meta.url);
     const eventFilenames = eventNames.map(
         (n) => new URL(`${n}.mjs`, eventDirectory),
@@ -118,7 +126,7 @@ function loadEvents(eventNames) {
 
 /**
  * Prepare the application and automatically detect protocols.
- * @return {Promise<array>} a promise that resolves when prepared
+ * @return {Promise<void[]>} a promise that resolves when prepared
  */
 async function execute() {
     // Use application
