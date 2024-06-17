@@ -14,6 +14,14 @@ import {
 import discord from "discord.js";
 import got from "got";
 
+/**
+ * Base urls for CDN and Media endpoints in Discord's API.
+ */
+const baseUrlCdn = "https://cdn.discordapp.com";
+
+/**
+ * Sequalise instance for database connection.
+ */
 const sequelize = useSequelize();
 
 /**
@@ -34,6 +42,16 @@ User.init({
 });
 
 /**
+ * Mapping avatar hash into imeage url.
+ * @param {string} userId - The id of the discord user.
+ * @param {string} avatarHash - The image hash of the avatar.
+ * @return {string} - The url of the avatar image.
+ */
+function toAvatarUrl(userId, avatarHash) {
+    return `${baseUrlCdn}/avatars/${userId}/${avatarHash}`;
+}
+
+/**
  * Convert Discord's Member to Deter's User
  * @param {discord.Member} member Discord's Member
  * @return {Object}
@@ -46,7 +64,7 @@ export async function memberToUser(member) {
     } = member;
 
     const {
-        id,
+        id: userId,
         username,
         globalName: memberGlobalDisplayName,
         avatar: memberGlobalAvatarHash,
@@ -58,21 +76,22 @@ export async function memberToUser(member) {
     let avatarHash = memberLocalAvatarHash ||
         memberGlobalAvatarHash;
 
-    const avatarUrl = `https://cdn.discordapp.com/avatars/${id}/${avatarHash}`;
     try {
+        const avatarUrl = toAvatarUrl(userId, avatarHash);
+        const targetPath = `assets/images/avatar-${userId}`;
         await new Promise((resolve) => {
             got.
                 stream(avatarUrl).
-                pipe(createWriteStream(`assets/images/avatar-${id}`)).
+                pipe(createWriteStream(targetPath)).
                 once("finish", resolve);
         });
-    } catch (error) {
-        console.log(error);
+    } catch (e) {
+        console.error(e);
         avatarHash = null;
     }
 
     return {
-        id,
+        userId,
         username,
         displayName,
         avatarHash,

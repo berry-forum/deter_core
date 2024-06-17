@@ -10,6 +10,9 @@ import {
 import discord from "discord.js";
 import {attachmentToMedia} from "./media.mjs";
 
+/**
+ * Sequalise instance for database connection.
+ */
 const sequelize = useSequelize();
 
 /**

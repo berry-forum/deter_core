@@ -9,6 +9,9 @@ import {
 
 import discord from "discord.js";
 
+/**
+ * Sequalise instance for database connection.
+ */
 const sequelize = useSequelize();
 
 /**
