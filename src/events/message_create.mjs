@@ -33,7 +33,8 @@ export default () => client.on(Events.MessageCreate, async (message) => {
     }
 
     const authorMember = await message.guild.members.fetch(message.author.id);
-    await User.upsert(memberToUser(authorMember));
+    const authorUser = await memberToUser(authorMember);
+    await User.upsert(authorUser);
 
     const messageMedia = Array.from(
         message.attachments.values(),

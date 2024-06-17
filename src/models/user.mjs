@@ -38,7 +38,7 @@ User.init({
  * @param {discord.Member} member Discord's Member
  * @return {Object}
  */
-export function memberToUser(member) {
+export async function memberToUser(member) {
     const {
         user,
         nickname: memberLocalDisplayName,
@@ -55,11 +55,21 @@ export function memberToUser(member) {
     const displayName = memberLocalDisplayName ||
         memberGlobalDisplayName ||
         username;
-    const avatarHash = memberLocalAvatarHash ||
+    let avatarHash = memberLocalAvatarHash ||
         memberGlobalAvatarHash;
 
     const avatarUrl = `https://cdn.discordapp.com/avatars/${id}/${avatarHash}`;
-    got.stream(avatarUrl).pipe(createWriteStream(`assets/images/avatar-${id}`));
+    try {
+        await new Promise((resolve) => {
+            got.
+                stream(avatarUrl).
+                pipe(createWriteStream(`assets/images/avatar-${id}`)).
+                once("finish", resolve);
+        });
+    } catch (error) {
+        console.log(error);
+        avatarHash = null;
+    }
 
     return {
         id,

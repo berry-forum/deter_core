@@ -91,9 +91,9 @@ export const initializePromise = (async () => {
     const remoteUsers = await channel.guild.members.fetch({
         user: appendUserIds,
     });
-    const appendUsers = Array.from(
+    const appendUsers = await Promise.all(Array.from(
         remoteUsers.values(),
-    ).map(memberToUser);
+    ).map(memberToUser));
 
     // Bulk creation
     await User.bulkCreate(appendUsers, {
