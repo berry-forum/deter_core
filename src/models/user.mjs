@@ -45,10 +45,15 @@ User.init({
  * Mapping avatar hash into imeage url.
  * @param {string} userId - The id of the discord user.
  * @param {string} avatarHash - The image hash of the avatar.
- * @return {string} - The url of the avatar image.
+ * @return {string|null} - The url of the avatar image.
  */
 function toAvatarUrl(userId, avatarHash) {
-    return `${baseUrlCdn}/avatars/${userId}/${avatarHash}`;
+    if (!userId || !avatarHash) {
+        return null;
+    }
+    const url = `${baseUrlCdn}/avatars/${userId}/${avatarHash}`;
+    console.log(url);
+    return url;
 }
 
 /**
@@ -78,13 +83,18 @@ export async function memberToUser(member) {
 
     try {
         const avatarUrl = toAvatarUrl(userId, avatarHash);
-        const targetPath = `assets/images/avatar-${userId}`;
-        await new Promise((resolve) => {
-            got.
-                stream(avatarUrl).
-                pipe(createWriteStream(targetPath)).
-                once("finish", resolve);
-        });
+        if (avatarUrl) {
+            const targetPath = `assets/images/avatar-${userId}`;
+            await new Promise((resolve, reject) => {
+                got.
+                    stream(avatarUrl).
+                    pipe(createWriteStream(targetPath)).
+                    once("finish", resolve).
+                    on("error", reject);
+            });
+        } else {
+            avatarHash = null;
+        }
     } catch (e) {
         console.error(e);
         avatarHash = null;
