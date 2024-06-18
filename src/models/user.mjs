@@ -91,7 +91,7 @@ export async function memberToUser(member) {
     }
 
     return {
-        userId,
+        id: userId,
         username,
         displayName,
         avatarHash,
